@@ -75,19 +75,27 @@ export class UsersService {
     username: string,
     email: string,
     phone: string,
+    profileImage?: string,
   ) {
     console.log('📌 Log: กำลังอัปเดตข้อมูลในฐานข้อมูล ->', {
       id,
       username,
       email,
       phone,
+      profileImage,
     });
 
-    const updateResult = await this.userRepository.update(id, {
+    const updateData: Partial<User> = {
       username,
       email,
       phone,
-    });
+    };
+
+    if (profileImage) {
+      updateData.profileImage = profileImage;
+    }
+
+    const updateResult = await this.userRepository.update(id, updateData);
 
     if (updateResult.affected === 0) {
       throw new Error('Update failed, user not found');
